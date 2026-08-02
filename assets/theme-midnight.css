@@ -1,0 +1,42 @@
+@charset "UTF-8";
+/* Theme: Midnight — the default. Dark, high-contrast, built for a lit room
+   with the lights down. Fills the full token contract in the layout contract.
+
+   Scoped to [data-theme] rather than bare :root so several themes can be
+   linked at once and the reader can switch between them. */
+@layer reset, theme, base, components, chrome, article;
+
+@layer theme {
+  :root[data-theme="midnight"]{
+    /* surfaces */
+    --bg:#0d1117; --surface:#161b22; --surface-2:#1c2128; --surface-3:#21262d;
+
+    /* text */
+    --fg:#e6edf3; --fg-muted:#9aa7b4; --fg-subtle:#6e7b8a; --code-fg:#a5d6ff;
+
+    /* lines */
+    --border:#30363d; --border-subtle:#242a31;
+
+    /* accent */
+    --accent:#58a6ff; --accent-soft:rgba(88,166,255,.14); --accent-border:rgba(88,166,255,.4);
+
+    /* semantic */
+    --good:#3fb950; --good-soft:rgba(63,185,80,.1);  --good-border:rgba(63,185,80,.4);
+    --warn:#d29922; --warn-soft:rgba(210,153,34,.1); --warn-border:rgba(210,153,34,.4);
+    --bad:#f85149;  --bad-soft:rgba(248,81,73,.1);   --bad-border:rgba(248,81,73,.4);
+
+    /* shape */
+    --radius:10px; --radius-sm:6px;
+
+    /* type */
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+    --mono:"Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+    --fs-label:.7rem; --fs-sm:.86rem; --fs-base:1rem; --fs-lg:1.35rem; --fs-xl:2.6rem;
+
+    /* density */
+    --slide-pad-top:4vh; --slide-pad-inline:6vw; --slide-pad-bottom:6vh;
+
+    /* reading mode */
+    --read-measure:74ch; --read-pad-block:3.2rem;
+  }
+}

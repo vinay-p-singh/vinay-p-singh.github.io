@@ -1,0 +1,36 @@
+{
+  "_": "Accepted deck-mode failures for this article. A waived failure is reported, never hidden, and any failure NOT on an accept list still fails. Consumed by the article-ux-review skill via __uxAudit({waivers}).",
+  "_reason": "This piece is a blog that offers a deck, not a deck that happens to be published. Reading mode is the default path on narrow screens and an equal path everywhere else, and it neither clips nor shrinks. These slides are deliberately dense reference material.",
+  "16": {
+    "reason": "Six-practice summary table. Dense by design; reads correctly in reading mode.",
+    "accept": ["scale-clamp-hit", "clipped-vertically", "clipped-horizontally", "font-below-floor"]
+  },
+  "17": {
+    "reason": "Invariant examples with code. Dense by design; reads correctly in reading mode.",
+    "accept": ["scale-clamp-hit", "clipped-vertically", "font-below-floor"]
+  },
+  "18": {
+    "reason": "Test-first vs test-last, two-column with two code blocks. Reads correctly in reading mode.",
+    "accept": ["scale-clamp-hit", "clipped-vertically", "clipped-horizontally", "font-below-floor"]
+  },
+  "19": {
+    "reason": "Three practices joined. Reads correctly in reading mode.",
+    "accept": ["scale-clamp-hit", "clipped-vertically", "font-below-floor"]
+  },
+  "20": {
+    "reason": "Layered feedback detail. Reads correctly in reading mode.",
+    "accept": ["scale-clamp-hit", "clipped-vertically", "font-below-floor"]
+  },
+  "21": {
+    "reason": "Entropy control detail. Reads correctly in reading mode.",
+    "accept": ["scale-clamp-hit", "clipped-vertically", "font-below-floor"]
+  },
+  "23": {
+    "reason": "Evidence table with citations. Dense by design; reads correctly in reading mode.",
+    "accept": ["scale-clamp-hit", "clipped-vertically", "font-below-floor"]
+  },
+  "24": {
+    "reason": "Closing summary. Reads correctly in reading mode.",
+    "accept": ["scale-clamp-hit", "clipped-vertically", "font-below-floor"]
+  }
+}

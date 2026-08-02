@@ -1,0 +1,18 @@
+{
+  "site": {
+    "title": "Vinay Bhadauria",
+    "tagline": "Writing I think is worth keeping — on software design, AI-assisted engineering, and the craft underneath both."
+  },
+  "articles": [
+    {
+      "slug": "software-fundamentals-matter-more-than-ever",
+      "title": "Software fundamentals matter more than ever",
+      "summary": "Matt Pocock's argument that AI raises the value of a good codebase and the cost of a bad one — five failure modes, five fixes, and the practices that hold up under generated code, with the research behind them.",
+      "date": "2026-07-31",
+      "format": "Deck",
+      "length": "25 slides",
+      "topics": ["Software design", "AI-assisted engineering", "Code quality", "Testing"],
+      "featured": true
+    }
+  ]
+}

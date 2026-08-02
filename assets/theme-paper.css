@@ -1,0 +1,40 @@
+@charset "UTF-8";
+/* Theme: Paper — light, for a bright room and for print to PDF.
+   Runs slightly denser than Midnight, which is the point of the density tokens:
+   a theme is allowed to change how much room the content gets, not only its colour. */
+@layer reset, theme, base, components, chrome, article;
+
+@layer theme {
+  :root[data-theme="paper"]{
+    /* surfaces */
+    --bg:#fbfbf9; --surface:#ffffff; --surface-2:#f4f4f1; --surface-3:#eaeae5;
+
+    /* text */
+    --fg:#16181c; --fg-muted:#4b5359; --fg-subtle:#767d85; --code-fg:#0a4a9e;
+
+    /* lines */
+    --border:#d9d9d2; --border-subtle:#ecece6;
+
+    /* accent */
+    --accent:#0b5fd0; --accent-soft:rgba(11,95,208,.08); --accent-border:rgba(11,95,208,.35);
+
+    /* semantic */
+    --good:#1a7f37; --good-soft:rgba(26,127,55,.09);  --good-border:rgba(26,127,55,.35);
+    --warn:#8a6100; --warn-soft:rgba(138,97,0,.09);   --warn-border:rgba(138,97,0,.35);
+    --bad:#c02b1d;  --bad-soft:rgba(192,43,29,.08);   --bad-border:rgba(192,43,29,.35);
+
+    /* shape */
+    --radius:10px; --radius-sm:6px;
+
+    /* type */
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+    --mono:"Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+    --fs-label:.72rem; --fs-sm:.88rem; --fs-base:1rem; --fs-lg:1.35rem; --fs-xl:2.6rem;
+
+    /* density — tighter than Midnight, buying content room back */
+    --slide-pad-top:3.4vh; --slide-pad-inline:5.4vw; --slide-pad-bottom:5vh;
+
+    /* reading mode */
+    --read-measure:70ch; --read-pad-block:2.8rem;
+  }
+}

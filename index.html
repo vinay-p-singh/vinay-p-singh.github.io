@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vinay Bhadauria — Writing</title>
+<meta name="description" content="Writing on software design, AI-assisted engineering, and the craft underneath both." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Vinay Bhadauria — Writing" />
+<meta property="og:description" content="Writing on software design, AI-assisted engineering, and the craft underneath both." />
+<meta property="og:url" content="https://vinay199129.github.io/" />
+<link rel="stylesheet" href="/assets/site.css" />
+</head>
+<body>
+
+<main class="wrap">
+  <header class="masthead">
+    <h1 id="site-title">Vinay Bhadauria</h1>
+    <p class="tagline" id="site-tagline"></p>
+  </header>
+
+  <section id="list" class="list" aria-live="polite">
+    <p class="state">Loading…</p>
+  </section>
+
+  <footer class="foot">
+    <span id="foot-count"></span>
+  </footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var SAFE_SLUG = /^[a-z0-9][a-z0-9-]*$/;
+  var MONTHS = ["January","February","March","April","May","June",
+                "July","August","September","October","November","December"];
+
+  var list = document.getElementById("list");
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) { n.className = cls; }
+    if (text !== undefined && text !== null) { n.textContent = String(text); }
+    return n;
+  }
+
+  function humanDate(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ""));
+    if (!m) { return ""; }
+    return Number(m[3]) + " " + MONTHS[Number(m[2]) - 1] + " " + m[1];
+  }
+
+  function card(a) {
+    // Slug builds a URL, so anything not matching the safe pattern is dropped entirely.
+    if (!SAFE_SLUG.test(String(a.slug || ""))) { return null; }
+
+    var link = el("a", "card");
+    link.href = "/articles/" + a.slug + "/";
+
+    var meta = el("div", "meta");
+    if (a.format) { meta.appendChild(el("span", "badge", a.format)); }
+    if (a.date) { meta.appendChild(el("span", null, humanDate(a.date))); }
+    if (a.length) { meta.appendChild(el("span", null, a.length)); }
+    link.appendChild(meta);
+
+    link.appendChild(el("h2", null, a.title || a.slug));
+    if (a.summary) { link.appendChild(el("p", null, a.summary)); }
+
+    if (Array.isArray(a.topics) && a.topics.length) {
+      var topics = el("div", "topics");
+      a.topics.forEach(function (t) { topics.appendChild(el("span", "topic", t)); });
+      link.appendChild(topics);
+    }
+    return link;
+  }
+
+  function render(data) {
+    var site = data.site || {};
+    if (site.title) {
+      document.getElementById("site-title").textContent = site.title;
+    }
+    document.getElementById("site-tagline").textContent = site.tagline || "";
+
+    var articles = (data.articles || []).slice().sort(function (x, y) {
+      return String(y.date || "").localeCompare(String(x.date || ""));
+    });
+
+    list.textContent = "";
+    var shown = 0;
+    articles.forEach(function (a) {
+      var c = card(a);
+      if (c) { list.appendChild(c); shown++; }
+    });
+
+    if (!shown) {
+      list.appendChild(el("p", "state", "Nothing published yet."));
+    }
+    document.getElementById("foot-count").textContent =
+      shown + (shown === 1 ? " article" : " articles");
+  }
+
+  function fail(msg) {
+    list.textContent = "";
+    var box = el("div", "state error");
+    box.appendChild(el("p", null, msg));
+    box.appendChild(el("p", "hint",
+      "The index reads articles.json over HTTP, which the file:// protocol blocks. " +
+      "Serve the folder locally: python -m http.server 8080"));
+    list.appendChild(box);
+  }
+
+  fetch("/articles.json", { cache: "no-cache" })
+    .then(function (r) {
+      if (!r.ok) { throw new Error("HTTP " + r.status); }
+      return r.json();
+    })
+    .then(render)
+    .catch(function (e) { fail("Could not load articles.json (" + e.message + ")."); });
+})();
+</script>
+
+</body>
+</html>
