@@ -1,8 +1,8 @@
-# vinay199129.github.io
+# vinay-p-singh.github.io
 
 Writing on software design, AI-assisted engineering, and the craft underneath both.
 
-Live at **https://vinay199129.github.io**
+Live at **https://vinay-p-singh.github.io**
 
 ## How it works
 

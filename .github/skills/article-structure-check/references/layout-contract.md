@@ -101,7 +101,7 @@ Not `/assets/deck.css`. A root-absolute path works on GitHub Pages and resolves 
 <meta property="og:type" content="article" />
 <meta property="og:title" content="TITLE" />
 <meta property="og:description" content="SUMMARY" />
-<meta property="og:url" content="https://vinay199129.github.io/articles/SLUG/" />
+<meta property="og:url" content="https://vinay-p-singh.github.io/articles/SLUG/" />
 <link rel="stylesheet" href="../../assets/deck.css" />
 <link rel="stylesheet" href="../../assets/theme-midnight.css" />
 </head>

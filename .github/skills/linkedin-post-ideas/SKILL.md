@@ -147,4 +147,4 @@ The composer check is the only current source of live hashtag activity. This ski
 | Drafts read the same | Angles too close together | Force three different archetypes from the post formats reference |
 | A tag is rejected in the composer | Tag is dead or was renamed | Drop it and take the next candidate in the same tier |
 
-> Brought to you by vinay199129/vinay199129.github.io
+> Brought to you by vinay-p-singh/vinay-p-singh.github.io
