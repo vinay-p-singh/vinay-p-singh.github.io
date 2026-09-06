@@ -26,6 +26,13 @@ body{
   margin:0 0 .7rem;
 }
 .tagline{margin:0; color:var(--fg-muted); max-width:46ch; font-size:1.02rem}
+.site-nav{display:flex; flex-wrap:wrap; gap:.5rem 1.25rem; margin-top:1.25rem; letter-spacing:0}
+.site-nav a{
+  display:inline-flex; align-items:center; min-height:44px;
+  color:var(--fg-muted); font-size:.875rem; text-underline-offset:.2em;
+}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent)}
+.site-nav a:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
 
 /* ---------- article cards ---------- */
 .list{display:flex; flex-direction:column; gap:1rem}
