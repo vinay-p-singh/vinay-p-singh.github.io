@@ -24,8 +24,14 @@ A flat static site with no build step and no generator. Each article is a self-c
 
 Article pages keep their own design. They load `site.js` and nothing else, so the site can evolve without touching published work.
 
-The homepage uses an unframed article list and an author portrait served from the
-portfolio's public image URL. Its Appearance control follows the system by default;
+The [portfolio](https://vinay-p-singh.github.io/portfolio/) is the visual reference:
+the homepage matches its ink-and-brass light/dark color tokens, sans-serif headings,
+rounded article surfaces, navigation, and portrait treatment. Do not restyle the
+portfolio to match a writing-page experiment. The two sites serve their own CSS;
+keep the `--cp-*` token blocks aligned with the portfolio's `assets/css/style.css`.
+
+The author portrait is served from the portfolio's public image URL.
+The homepage's Appearance control follows the system by default;
 manual light/dark choices use the `writing:theme` localStorage key. A valid
 `?scoutTheme=light` or `?scoutTheme=dark` parameter overrides the saved preference.
 
