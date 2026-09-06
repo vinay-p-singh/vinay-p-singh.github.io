@@ -3,32 +3,64 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Vinay Bhadauria — Writing</title>
-<meta name="description" content="Writing on software design, AI-assisted engineering, and the craft underneath both." />
+<script>
+(function () {
+  var theme = new URLSearchParams(location.search).get("scoutTheme");
+  if (theme !== "light" && theme !== "dark") {
+    try { theme = localStorage.getItem("writing:theme"); } catch (error) {}
+  }
+  if (theme !== "light" && theme !== "dark") {
+    theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  document.documentElement.dataset.theme = theme;
+})();
+</script>
+<title>Vinay Pratap Singh — Writing</title>
+<meta name="author" content="Vinay Pratap Singh" />
+<meta name="description" content="Notes on software design and AI-assisted engineering by Vinay Pratap Singh." />
+<link rel="canonical" href="https://vinay-p-singh.github.io/" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Vinay Bhadauria — Writing" />
-<meta property="og:description" content="Writing on software design, AI-assisted engineering, and the craft underneath both." />
+<meta property="og:title" content="Vinay Pratap Singh — Writing" />
+<meta property="og:description" content="Notes on software design and AI-assisted engineering by Vinay Pratap Singh." />
 <meta property="og:url" content="https://vinay-p-singh.github.io/" />
-<link rel="stylesheet" href="/assets/site.css" />
+<link rel="stylesheet" href="/assets/site.css?v=editorial-1" />
 </head>
 <body>
 
+<a class="skip-link" href="#articles">Skip to articles</a>
 <main class="wrap">
-  <header class="masthead">
-    <h1 id="site-title">Vinay Bhadauria</h1>
-    <p class="tagline" id="site-tagline"></p>
+  <div class="topline">
+    <span class="section-label">Writing</span>
     <nav class="site-nav" aria-label="More from Vinay">
       <a href="https://vinay-p-singh.github.io/portfolio/">Portfolio</a>
       <a href="https://github.com/vinay-p-singh">GitHub profile</a>
     </nav>
+  </div>
+  <header class="masthead">
+    <div>
+      <h1 id="site-title">Vinay Pratap Singh</h1>
+      <p class="tagline" id="site-tagline">Notes on software design and AI-assisted engineering.</p>
+    </div>
+    <img class="portrait" src="https://vinay-p-singh.github.io/portfolio/assets/images/profile-pic.jpg" width="88" height="110" alt="Vinay Pratap Singh" fetchpriority="high" />
   </header>
 
-  <section id="list" class="list" aria-live="polite">
-    <p class="state">Loading…</p>
+  <section id="articles" aria-labelledby="articles-title" tabindex="-1">
+    <h2 class="section-label" id="articles-title">Articles</h2>
+    <div id="list" class="list" aria-live="polite">
+      <p class="state">Loading articles...</p>
+    </div>
+    <noscript><p><a href="/articles/software-fundamentals-matter-more-than-ever/">Software fundamentals matter more than ever</a></p></noscript>
   </section>
 
   <footer class="foot">
     <span id="foot-count"></span>
+    <label class="appearance" for="appearance">Appearance
+      <select id="appearance" disabled>
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </label>
   </footer>
 </main>
 
@@ -42,85 +74,107 @@
 
   var list = document.getElementById("list");
 
-  function el(tag, cls, text) {
-    var n = document.createElement(tag);
-    if (cls) { n.className = cls; }
-    if (text !== undefined && text !== null) { n.textContent = String(text); }
-    return n;
+  var appearance = document.getElementById("appearance");
+  var systemTheme = matchMedia("(prefers-color-scheme: dark)");
+  var preference = new URLSearchParams(location.search).get("scoutTheme");
+  if (preference !== "light" && preference !== "dark") {
+    try { preference = localStorage.getItem("writing:theme"); } catch (error) {}
+  }
+  appearance.value = preference === "light" || preference === "dark" ? preference : "system";
+  appearance.disabled = false;
+
+  function applyTheme() {
+    document.documentElement.dataset.theme = appearance.value === "system"
+      ? (systemTheme.matches ? "dark" : "light") : appearance.value;
+  }
+
+  appearance.addEventListener("change", function () {
+    applyTheme();
+    try {
+      if (appearance.value === "system") { localStorage.removeItem("writing:theme"); }
+      else { localStorage.setItem("writing:theme", appearance.value); }
+    } catch (error) {}
+    var url = new URL(location.href);
+    url.searchParams.delete("scoutTheme");
+    history.replaceState(null, "", url);
+  });
+  systemTheme.addEventListener("change", function () {
+    if (appearance.value === "system") { applyTheme(); }
+  });
+
+  function el(tag, className, text) {
+    var element = document.createElement(tag);
+    if (className) { element.className = className; }
+    if (text !== undefined && text !== null) { element.textContent = String(text); }
+    return element;
   }
 
   function humanDate(iso) {
-    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ""));
-    if (!m) { return ""; }
-    return Number(m[3]) + " " + MONTHS[Number(m[2]) - 1] + " " + m[1];
+    var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ""));
+    if (!match) { return ""; }
+    return Number(match[3]) + " " + MONTHS[Number(match[2]) - 1] + " " + match[1];
   }
 
-  function card(a) {
-    // Slug builds a URL, so anything not matching the safe pattern is dropped entirely.
-    if (!SAFE_SLUG.test(String(a.slug || ""))) { return null; }
-
-    var link = el("a", "card");
-    link.href = "/articles/" + a.slug + "/";
-
-    var meta = el("div", "meta");
-    if (a.format) { meta.appendChild(el("span", "badge", a.format)); }
-    if (a.date) { meta.appendChild(el("span", null, humanDate(a.date))); }
-    if (a.length) { meta.appendChild(el("span", null, a.length)); }
-    link.appendChild(meta);
-
-    link.appendChild(el("h2", null, a.title || a.slug));
-    if (a.summary) { link.appendChild(el("p", null, a.summary)); }
-
-    if (Array.isArray(a.topics) && a.topics.length) {
-      var topics = el("div", "topics");
-      a.topics.forEach(function (t) { topics.appendChild(el("span", "topic", t)); });
-      link.appendChild(topics);
+  function articleEntry(article) {
+    if (!SAFE_SLUG.test(String(article.slug || ""))) { return null; }
+    var entry = el("article", "article-entry");
+    var meta = el("p", "meta");
+    if (article.date) {
+      var date = el("time", null, humanDate(article.date));
+      date.dateTime = article.date;
+      meta.appendChild(date);
     }
-    return link;
+    if (article.length) { meta.appendChild(el("span", null, article.length)); }
+    entry.appendChild(meta);
+    var heading = el("h3");
+    var link = el("a", null, article.title || article.slug);
+    link.href = "/articles/" + article.slug + "/";
+    heading.appendChild(link);
+    entry.appendChild(heading);
+    if (article.summary) { entry.appendChild(el("p", "summary", article.summary)); }
+    return entry;
   }
 
   function render(data) {
     var site = data.site || {};
-    if (site.title) {
-      document.getElementById("site-title").textContent = site.title;
-    }
-    document.getElementById("site-tagline").textContent = site.tagline || "";
-
-    var articles = (data.articles || []).slice().sort(function (x, y) {
-      return String(y.date || "").localeCompare(String(x.date || ""));
+    if (site.title) { document.getElementById("site-title").textContent = site.title; }
+    if (site.tagline) { document.getElementById("site-tagline").textContent = site.tagline; }
+    var articles = (data.articles || []).slice().sort(function (first, second) {
+      return String(second.date || "").localeCompare(String(first.date || ""));
     });
-
     list.textContent = "";
     var shown = 0;
-    articles.forEach(function (a) {
-      var c = card(a);
-      if (c) { list.appendChild(c); shown++; }
+    articles.forEach(function (article) {
+      var entry = articleEntry(article);
+      if (entry) { list.appendChild(entry); shown++; }
     });
-
-    if (!shown) {
-      list.appendChild(el("p", "state", "Nothing published yet."));
-    }
-    document.getElementById("foot-count").textContent =
-      shown + (shown === 1 ? " article" : " articles");
+    if (!shown) { list.appendChild(el("p", "state", "Nothing published yet.")); }
+    document.getElementById("foot-count").textContent = shown + (shown === 1 ? " article" : " articles");
   }
 
-  function fail(msg) {
+  function fail() {
     list.textContent = "";
     var box = el("div", "state error");
-    box.appendChild(el("p", null, msg));
-    box.appendChild(el("p", "hint",
-      "The index reads articles.json over HTTP, which the file:// protocol blocks. " +
-      "Serve the folder locally: python -m http.server 8080"));
+    box.setAttribute("role", "alert");
+    box.appendChild(el("p", null, "The article list couldn't be loaded."));
+    var retry = el("button", "retry", "Try again");
+    retry.type = "button";
+    retry.addEventListener("click", loadArticles);
+    box.appendChild(retry);
     list.appendChild(box);
   }
 
-  fetch("/articles.json", { cache: "no-cache" })
-    .then(function (r) {
-      if (!r.ok) { throw new Error("HTTP " + r.status); }
-      return r.json();
-    })
-    .then(render)
-    .catch(function (e) { fail("Could not load articles.json (" + e.message + ")."); });
+  function loadArticles() {
+    list.replaceChildren(el("p", "state", "Loading articles..."));
+    return fetch("/articles.json", { cache: "no-cache" })
+      .then(function (response) {
+        if (!response.ok) { throw new Error("HTTP " + response.status); }
+        return response.json();
+      })
+      .then(render)
+      .catch(fail);
+  }
+  loadArticles();
 })();
 </script>
 

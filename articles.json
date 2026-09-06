@@ -1,13 +1,13 @@
 {
   "site": {
-    "title": "Vinay Bhadauria",
-    "tagline": "Writing I think is worth keeping — on software design, AI-assisted engineering, and the craft underneath both."
+    "title": "Vinay Pratap Singh",
+    "tagline": "Notes on software design and AI-assisted engineering."
   },
   "articles": [
     {
       "slug": "software-fundamentals-matter-more-than-ever",
       "title": "Software fundamentals matter more than ever",
-      "summary": "Matt Pocock's argument that AI raises the value of a good codebase and the cost of a bad one — five failure modes, five fixes, and the practices that hold up under generated code, with the research behind them.",
+      "summary": "A reading of Matt Pocock's case for software fundamentals in AI-assisted development, with practical approaches to testing, domain modeling, and feedback.",
       "date": "2026-07-31",
       "format": "Deck",
       "length": "25 slides",

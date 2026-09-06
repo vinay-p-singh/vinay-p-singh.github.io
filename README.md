@@ -1,6 +1,6 @@
 # vinay-p-singh.github.io
 
-Writing on software design, AI-assisted engineering, and the craft underneath both.
+Writing by Vinay Pratap Singh on software design and AI-assisted engineering.
 
 Live at **https://vinay-p-singh.github.io**
 
@@ -23,6 +23,15 @@ A flat static site with no build step and no generator. Each article is a self-c
 ```
 
 Article pages keep their own design. They load `site.js` and nothing else, so the site can evolve without touching published work.
+
+The homepage uses an unframed article list and an author portrait served from the
+portfolio's public image URL. Its Appearance control follows the system by default;
+manual light/dark choices use the `writing:theme` localStorage key. A valid
+`?scoutTheme=light` or `?scoutTheme=dark` parameter overrides the saved preference.
+
+Keep the public name consistent in homepage metadata, `articles.json`, and article
+bylines. Changing presentation must not rename article slugs or remove their source
+attribution. The article catalog still supplies the GitHub profile's latest-writing block.
 
 ## Publishing an article
 
