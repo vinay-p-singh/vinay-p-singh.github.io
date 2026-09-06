@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="midnight">
+<html lang="en" data-theme="light" data-themes="light dark" data-mode="read">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Software fundamentals matter more than ever</title>
-<meta name="description" content="AI raises the value of a good codebase and the cost of a bad one. Five failure modes, five fixes, and the practices that hold up under generated code — with the research behind them." />
+<meta name="description" content="A practical reading of Matt Pocock's argument for software fundamentals: shared vocabulary, testable boundaries, and feedback loops, with evidence and limitations." />
 <meta name="author" content="Vinay Pratap Singh" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Software fundamentals matter more than ever" />
-<meta property="og:description" content="AI raises the value of a good codebase and the cost of a bad one. Five failure modes, five fixes, and the practices that hold up under generated code — with the research behind them." />
+<meta property="og:description" content="A practical reading of Matt Pocock's argument for software fundamentals: shared vocabulary, testable boundaries, and feedback loops, with evidence and limitations." />
 <meta property="og:url" content="https://vinay-p-singh.github.io/articles/software-fundamentals-matter-more-than-ever/" />
-<link rel="stylesheet" href="../../assets/deck.css" />
-<link rel="stylesheet" href="../../assets/theme-midnight.css" />
-<link rel="stylesheet" href="../../assets/theme-paper.css" />
+<link rel="canonical" href="https://vinay-p-singh.github.io/articles/software-fundamentals-matter-more-than-ever/" />
+<script src="../../assets/article-theme.js?v=portfolio-1"></script>
+<link rel="stylesheet" href="../../assets/deck.css?v=portfolio-1" />
+<link rel="stylesheet" href="../../assets/theme-portfolio.css?v=portfolio-1" />
 </head>
 <body>
 
@@ -20,45 +21,45 @@
 
 <!-- ══════════════════ 1 ══════════════════ -->
 <section class="slide active">
-  <p class="eyebrow">A talk, and what came of it</p>
-  <h1>Software fundamentals matter<br />more than ever</h1>
-  <p class="lead">Matt Pocock's argument — and what it actually asks you to change about the way
-  you build.</p>
+  <p class="eyebrow">Software design / AI-assisted engineering</p>
+  <h1>Software fundamentals matter more than ever</h1>
+  <p class="lead">A reading of Matt Pocock's argument, followed by practical ways to keep
+  generated code understandable, testable, and safe to change.</p>
   <div class="cols two" style="margin-top:2rem">
     <div class="card accent">
       <span class="k">Part one</span>
-      <p>The ideas. Why "code is cheap" is wrong, and the five failure modes it produces.</p>
+      <p>Five recurring problems: unclear requirements, ambiguous vocabulary, late feedback,
+      difficult testing, and more code than a team can review.</p>
     </div>
     <div class="card good">
       <span class="k">Part two</span>
-      <p>The practices. Domain language, invariants, test-first, deep modules, layered feedback,
-      entropy control — what each one buys, what it costs, and what the evidence says.</p>
+      <p>Six practices, their trade-offs, and the limits of the evidence. The ordering-system
+      examples are illustrative, not results from a client project.</p>
     </div>
   </div>
-  <div class="footnote">Vinay Pratap Singh</div>
+  <div class="footnote">Vinay Pratap Singh · Published 31 July 2026 · Revised 6 September 2026<br />
+  Part one interprets the talk; part two adds engineering guidance. Neither is a verbatim transcript.</div>
 </section>
 
 <!-- ══════════════════ 2 ══════════════════ -->
 <section class="slide">
   <p class="eyebrow">Part one · The thesis</p>
-  <h2>The comforting message</h2>
-  <blockquote>
-    Software fundamentals matter now more than they actually ever have.
-    <cite>Matt Pocock</cite>
-  </blockquote>
+  <h2>Generating code is only part of the work</h2>
+  <p class="lead">Pocock's central argument is that AI assistance increases the value of
+  a codebase people can understand and change.</p>
   <div class="cols two">
     <div>
-      <p>The fear: AI writes the code, so twenty years of engineering craft is now worth nothing.</p>
-      <p>The argument: the opposite. AI raises the value of a good codebase and raises the
-      <em>cost</em> of a bad one — because a codebase you cannot safely change is a codebase
-      AI cannot safely accelerate.</p>
+      <p>Generating an implementation does not settle its requirements, integration behavior,
+      operational risks, or maintenance cost.</p>
+      <p>Clear structure can reduce the context needed for a change and make verification easier.
+      That is a design rationale, not a measured guarantee of AI productivity.</p>
     </div>
     <div class="card accent">
       <h3>The chain</h3>
       <ul style="margin-bottom:0">
-        <li>AI in a good codebase performs really well</li>
-        <li>So good codebases matter more than ever</li>
-        <li>So software fundamentals matter more than ever</li>
+        <li>Make responsibilities and contracts explicit</li>
+        <li>Give each change a relevant check</li>
+        <li>Measure review effort and defects, not generated lines</li>
       </ul>
     </div>
   </div>
@@ -72,10 +73,10 @@
     <div>
       <p>Write a spec, generate code, don't look at the code. Bug? Change the spec, run the
       "compiler" again.</p>
-      <p>What actually happens: <strong>run one gives code, run two gives worse code, run three
-      gives worse still.</strong> Keep going and you have garbage.</p>
-      <p>This has a name already — <em>software entropy</em>. Every change made while thinking
-      only about that change, and never about the design of the whole system, degrades the system.</p>
+      <p>The risk is cumulative: regenerating without reviewing the diff can discard useful
+      decisions, introduce duplication, or break behavior the specification did not describe.</p>
+      <p>That is not inevitable. Regeneration can work when the specification, preserved contracts,
+      and validation are strong enough. Inspect what changed before accepting the result.</p>
     </div>
     <div>
       <div class="card bad" style="margin-bottom:1rem">
@@ -86,7 +87,7 @@
       <div class="card warn">
         <span class="k">The slogan being sold</span>
         <p>"Code is cheap." Ignore the code, let it manage itself.</p>
-        <p style="margin-top:.6rem;color:var(--fg)"><strong>That is vibe coding by another name.</strong></p>
+        <p style="margin-top:.6rem;color:var(--fg)"><strong>Cheap generation does not remove ownership costs.</strong></p>
       </div>
     </div>
   </div>
@@ -102,11 +103,11 @@
 <!-- ══════════════════ 4 ══════════════════ -->
 <section class="slide">
   <p class="eyebrow">Part one · The correction</p>
-  <h2>Code is not cheap. Bad code is<br />the most expensive it has ever been.</h2>
-  <p class="lead">Because a codebase that is hard to change cannot collect the bounty AI is offering.</p>
+  <h2>Count the cost of owning the code</h2>
+  <p class="lead">A faster first draft is useful only if verification and maintenance remain affordable.</p>
   <div class="cols" style="margin-top:1.5rem">
     <div class="card"><span class="k">Cheap now</span><span class="v">Writing</span>
-      <span class="sub">Generation is close to free</span></div>
+      <span class="sub">A first draft may take less time</span></div>
     <div class="card"><span class="k">Not cheap</span><span class="v">Owning</span>
       <span class="sub">Understanding, changing, trusting</span></div>
     <div class="card"><span class="k">The gap</span><span class="v">Yours</span>
@@ -127,28 +128,25 @@
   <h2>"The AI didn't build what I wanted"</h2>
   <div class="cols two">
     <div>
-      <p><strong>Diagnosis.</strong> No one knows exactly what they want. Talking to the AI
-      <em>is</em> requirements gathering — and you and it do not share the same picture.</p>
+      <p><strong>Possible cause.</strong> The desired behavior is underspecified, or the author
+      and assistant are working from different assumptions.</p>
       <p><strong>The design concept</strong> (Frederick Brooks): when two parties design something
-      together, the idea of the thing floats between them. It is not an artifact. You cannot put
-      it in a markdown file. It is the invisible theory of what is being built.</p>
-      <p><strong>Fix.</strong> Reach a shared design concept <em>before</em> producing any plan asset.</p>
+      together, they need a coherent account of what is being built. A document helps, but its
+      existence alone does not establish shared understanding.</p>
+      <p><strong>Fix.</strong> Clarify consequential decisions, record examples and exclusions,
+      and use the plan to expose disagreements before implementation.</p>
     </div>
     <div>
       <div class="card accent">
         <span class="k">The skill, in two lines</span>
-        <pre style="margin:.4rem 0 0;background:var(--surface-2)">Interview me relentlessly about every
-aspect of this plan until we reach a
-shared understanding.
-
-Walk down each branch of the design
-tree, resolving dependencies between
-decisions one by one.</pre>
+        <pre style="margin:.4rem 0 0;background:var(--surface-2)">Clarify the unresolved decisions.
+      Show one expected input and output.
+      Name what is out of scope.
+      Ask only questions that change the plan.</pre>
       </div>
-      <p style="margin-top:1rem">Reported in the talk: 40, 60, sometimes 100 questions before it is
-      satisfied. The conversation then becomes the PRD or the issue — not the other way round.</p>
-      <p><strong>Contrast with default plan mode:</strong> it is eager to produce an asset and
-      start working. Alignment first is cheaper than rework.</p>
+      <p style="margin-top:1rem">The number of questions is not a quality measure. Stop when
+      the material uncertainties are resolved; a small change should need a small discussion.</p>
+      <p>Write the acceptance criteria into the issue or plan so the result can be checked.</p>
     </div>
   </div>
   <div class="vocab">
@@ -165,22 +163,22 @@ decisions one by one.</pre>
   <h2>"The AI is way too verbose"</h2>
   <div class="cols two">
     <div>
-      <p><strong>Diagnosis.</strong> You are talking across purposes. This is exactly the old
+      <p><strong>One possible cause.</strong> You are talking across purposes. This resembles the old
       developer-and-domain-expert gap: they use terms you don't hold, you translate them into
       code neither of you can verify.</p>
       <p><strong>Fix — a ubiquitous language</strong> (DDD): conversations among developers,
       expressions in the code, and conversations with domain experts all derive from the same
       domain model.</p>
-      <p>In practice, a markdown file of agreed terms — scanned from the codebase, then kept
-      open while planning.</p>
+      <p>In practice, keep a short glossary within each bounded context. Record translations
+      where contexts use different meanings. A glossary can reduce ambiguity; verbosity can
+      also come from the prompt, model, or task itself.</p>
     </div>
     <div class="card good">
-      <span class="k">Reported in the talk</span>
+      <span class="k">What to check in your own workflow</span>
       <ul style="margin-bottom:0">
-        <li>Planning quality goes up</li>
-        <li>The model's own <strong>thinking traces get shorter</strong> — it stops narrating
-        around a concept it now has a word for</li>
-        <li>Implementation lands closer to what was planned</li>
+        <li>Fewer conflicting meanings in requirements and code</li>
+        <li>Less repeated explanation during reviews</li>
+        <li>Implementation matches the agreed examples</li>
       </ul>
     </div>
   </div>
@@ -188,7 +186,7 @@ decisions one by one.</pre>
     <span><b>ubiquitous language</b>one agreed word per concept, used identically in conversation, documents and code</span>
     <span><b>domain</b>the subject the software serves — claims, payments, usage metrics — not the software itself</span>
     <span><b>domain expert</b>the person who knows that subject deeply but does not write the code</span>
-    <span><b>thinking traces</b>the model's visible internal reasoning before it produces an answer</span>
+    <span><b>bounded context</b>the boundary within which a domain model and its terminology are consistent</span>
   </div>
   <div class="footnote">Domain-Driven Design — Eric Evans</div>
 </section>
@@ -210,14 +208,15 @@ decisions one by one.</pre>
     </div>
     <div class="card accent">
       <span class="k">Why TDD, specifically</span>
-      <p>Not because tests are virtuous. Because <strong>TDD is a mechanical constraint that
-      forces small steps</strong>:</p>
+      <p>A test-first workflow can encourage small, verifiable steps when the tests describe
+      the requirement independently of the implementation:</p>
       <ul style="margin:.8rem 0 0">
         <li>Write the test first</li>
         <li>Make it pass with the smallest change</li>
         <li>Refactor — and consider the design</li>
       </ul>
-      <p style="margin-top:.8rem">The model cannot outrun a loop it has to close on every step.</p>
+      <p style="margin-top:.8rem">A green test covers only its assertions. Review the test,
+      the change, and the risks the test does not exercise.</p>
     </div>
   </div>
   <div class="vocab">
@@ -240,8 +239,9 @@ decisions one by one.</pre>
         <li>What gets mocked?</li>
         <li>Which behaviours are even worth asserting?</li>
       </ul>
-      <p>Test a whole application and it is flaky, so you test fewer behaviours. Test this unit
-      and you must mock that one. None of these decisions is independent.</p>
+      <p>Broader tests can be slower or more sensitive to external systems; they are not
+      inherently flaky. Narrow tests can become brittle if they over-specify collaborators.
+      Choose boundaries according to the behavior and failure modes that matter.</p>
     </div>
     <div class="card good">
       <span class="k">The pivot back to code</span>
@@ -249,7 +249,7 @@ decisions one by one.</pre>
       Good codebases are <em>testable</em> codebases.</p>
       <p style="margin-top:.8rem">Which closes the loop: better structure → better feedback loops
       → better feedback to the model → better code out.</p>
-      <p><strong>Testability is an architectural property, not a testing-discipline property.</strong></p>
+      <p><strong>Testability depends on both architecture and test design.</strong></p>
     </div>
   </div>
   <div class="vocab">
@@ -266,7 +266,7 @@ decisions one by one.</pre>
   <h2>Deep modules, not shallow ones</h2>
   <div class="depth" style="margin-bottom:1rem">
     <div class="dpanel bad">
-      <h3>Shallow — what gets generated by default</h3>
+      <h3>Shallow — many interfaces for little behavior</h3>
       <div class="dgrid">
         <div class="unit"><div class="iface"></div><div class="blobs">
           <span class="blob"></span><span class="blob"></span><span class="blob"></span></div></div>
@@ -299,7 +299,7 @@ decisions one by one.</pre>
     </div>
   </div>
   <p style="max-width:none;margin-bottom:1rem"><strong>Same functionality on both sides. The only
-  difference is where the boundaries fall — and how much blue line you have to learn to use it.</strong>
+  difference is where the boundaries fall — and how much interface a caller has to learn.</strong>
   A module is <em>deep</em> when the implementation is significantly more complex than its interface,
   and <em>shallow</em> when the interface is nearly as complex as what sits behind it. Bertrand Meyer
   put it as an iceberg: a small tip above the water, a large body beneath.</p>
@@ -332,7 +332,8 @@ decisions one by one.</pre>
 <span class="dim">ssize_t</span> <span class="hi">write</span>(int fd, const void* buffer, size_t count);
 <span class="dim">off_t</span>   <span class="hi">lseek</span>(int fd, off_t offset, int referencePosition);
 <span class="dim">int</span>     <span class="hi">close</span>(int fd);</pre>
-      <p style="font-size:var(--fs-sm)">Everything a caller must learn to use a filesystem. Behind
+      <p style="font-size:var(--fs-sm)">A simplified sketch of core file I/O, not the complete POSIX API
+      or exact portable declarations. Behind these operations:
       it: disk devices, on-disk data structures, permissions, concurrent access, caching, crash
       recovery.</p>
     </div>
@@ -351,12 +352,10 @@ decisions one by one.</pre>
   <div class="card good" style="margin-top:.4rem">
     <span class="k">The part that matters for AI</span>
     <p style="font-size:var(--fs-lg);color:var(--fg);line-height:1.35;max-width:none">Unix filesystem
-    implementations have been rewritten many times over. Those five signatures have not changed.</p>
-    <p style="margin-top:.6rem;max-width:none">Every one of those rewrites was invisible to callers — because
-    the interface held still. That is the property you are buying. An implementation you can hand to a
-    model and have replaced wholesale, without anything upstream needing to know, is exactly a deep
-    module. Without that boundary, "let the AI rewrite it" means "let the AI rewrite everything that
-    touches it".</p>
+    implementations can change behind comparatively stable operations.</p>
+    <p style="margin-top:.6rem;max-width:none">Compatibility requires more than a stable signature:
+    error behavior, permissions, ordering, concurrency, and performance expectations may also matter.
+    Define and test the relevant contract before replacing the implementation.</p>
   </div>
   <div class="vocab">
     <span><b>signature</b>the name, parameters and return type of a function — the part callers depend on</span>
@@ -375,10 +374,10 @@ decisions one by one.</pre>
     <div>
       <p>More output means more review, more context, more system held in your head at once.
       A shallow codebase forces <em>you</em> to hold all of it too — not just the model.</p>
-      <p><strong>Deep modules give you gray boxes.</strong> Design the interface. Understand the
-      purpose. Verify from the outside. Don't read every line inside.</p>
-      <p><strong>The boundary of that permission is risk</strong> — finance, security, safety,
-      anything correctness-critical still gets read. Most modules in most apps do not.</p>
+      <p><strong>Deep modules help focus review.</strong> Understand the contract and verify
+      observable behavior, then inspect the implementation according to the change's risks.</p>
+      <p>Security, privacy, financial correctness, concurrency, and operational behavior may
+      require detailed inspection. A simple interface is not permission to skip that work.</p>
     </div>
     <div>
       <div class="card accent" style="margin-bottom:1rem">
@@ -406,14 +405,14 @@ decisions one by one.</pre>
   <h2>Invest in the design of the system every day</h2>
   <div class="cols two">
     <div>
-      <blockquote>Spec-to-code does not invest in the design of the system.<br />
-      It <em>divests</em> from it.</blockquote>
-      <p>Every regeneration that ignores structure spends the system's remaining changeability.</p>
+      <p class="lead">Keep specifications, implementation, and verification aligned.</p>
+      <p>Regeneration is a technique, not a design strategy. Review whether it preserves the
+      contracts and structure that future changes depend on.</p>
     </div>
     <div class="card good">
       <span class="k">The division of labour</span>
       <p style="font-size:var(--fs-lg);color:var(--fg);line-height:1.4;margin-bottom:.8rem">
-      AI is an excellent <em>tactical</em> programmer — the sergeant on the ground making the change.</p>
+      AI can assist with bounded implementation tasks.</p>
       <p>Someone has to be operating at the strategic level: architecture, requirements, risk,
       what "correct" means. That is you, and it needs exactly the fundamentals we have used for
       twenty years.</p>
@@ -435,15 +434,15 @@ decisions one by one.</pre>
     <thead><tr><th style="width:24%">Failure mode</th><th style="width:30%">Root cause</th><th>Fix</th></tr></thead>
     <tbody>
       <tr><td>It built the wrong thing</td><td>No shared design concept</td>
-          <td>Be interviewed relentlessly until understanding is shared — <em>before</em> any plan artifact exists</td></tr>
+          <td>Clarify consequential decisions and record acceptance examples</td></tr>
       <tr><td>It is too verbose</td><td>No shared vocabulary</td>
           <td>A ubiquitous language file; the same terms in requirements, code, and conversation</td></tr>
       <tr><td>It doesn't work</td><td>Feedback arrives too late</td>
-          <td>Types, tests, browser access — and TDD to force small steps. Feedback rate is the speed limit</td></tr>
+          <td>Types, tests, and browser checks after small changes; use test-first where it clarifies the requirement</td></tr>
       <tr><td>Testing is painful</td><td>Shallow modules, tangled boundaries</td>
-          <td>Deep modules: lots of functionality, simple interface. Testability is architecture</td></tr>
+          <td>Clear module boundaries and tests focused on behavior rather than implementation details</td></tr>
       <tr><td>Your brain can't keep up</td><td>You are holding the whole system</td>
-          <td>Treat modules as gray boxes. Design the interface, delegate the implementation</td></tr>
+          <td>Use module contracts to focus review; inspect implementation according to risk</td></tr>
     </tbody>
   </table>
   <p style="margin-top:.5rem"><strong>And underneath all five:</strong> invest in the design of
@@ -453,7 +452,7 @@ decisions one by one.</pre>
 <!-- ══════════════════ 14 ══════════════════ -->
 <section class="slide">
   <p class="eyebrow">Part two</p>
-  <h1>What to actually do</h1>
+  <h2>Six practices to apply deliberately</h2>
   <p class="lead">Five failure modes, six practices. What each one is for, what it costs, and
   what the evidence actually supports.</p>
   <div class="cols" style="margin-top:2rem">
@@ -463,12 +462,11 @@ decisions one by one.</pre>
       being true. Most of what follows is about moving rules somewhere they can go red.</p></div>
     <div class="card accent"><span class="k">Why it bites harder now</span>
       <p>None of these practices are new. What changed is the volume of code arriving against them.
-      A weak boundary that used to erode over a year now erodes over an afternoon.</p></div>
+      Faster generation can also increase the amount of code awaiting review.</p></div>
     <div class="card accent"><span class="k">The standard used here</span>
-      <p>Each claim is a published result, a canonical source, or a mechanism you can run yourself
-      and watch fail. Anything invented to make a shape visible is marked
-      <span class="tag">ILLUSTRATIVE</span> — so nothing here has to be taken on trust in someone
-      else's codebase.</p></div>
+      <p>The guidance combines established design ideas, a cited TDD case study, and illustrative
+      examples. It is not an experiment measuring coding-agent productivity. Validate each practice
+      against the risks and constraints of your own system.</p></div>
   </div>
   <div class="vocab">
     <span><b>invariant</b>a rule that must stay true no matter what the data does</span>
@@ -492,7 +490,7 @@ decisions one by one.</pre>
       <tr><td>Test-first</td><td>Tests that encode the bug you were trying to find</td>
           <td>Each test fails for the reason you predicted <em>before</em> you make it pass</td></tr>
       <tr><td>Deep modules</td><td>Boundaries drawn by accident, so nothing can be delegated safely</td>
-          <td>An implementation can be replaced without anything upstream noticing</td></tr>
+          <td>A replacement preserves the relevant observable contract</td></tr>
       <tr><td>Layered feedback</td><td>A suite that is green for reasons unrelated to correctness</td>
           <td>Each layer catches a class of error the others structurally cannot</td></tr>
       <tr><td>Entropy control</td><td>Decay that surfaces as a wrong answer instead of a red test</td>
@@ -500,10 +498,10 @@ decisions one by one.</pre>
     </tbody>
   </table>
   <p style="max-width:none;margin-top:.4rem"><strong>The common shape: each one converts a thing you
-  are supposed to remember into a thing a machine checks.</strong> Anything that relies on discipline
-  alone degrades at exactly the rate you add code — which is now much faster.</p>
+  are supposed to remember into a thing a machine checks.</strong> Automation helps with explicit,
+  testable properties; design decisions and untested risks still require judgment.</p>
   <div class="vocab">
-    <span><b>contract test</b>a test that pins the agreed <em>shape</em> of the data — the names and keys — rather than its values</span>
+    <span><b>contract test</b>a check of the data and behavior a consumer expects from a provider</span>
     <span><b>CI</b>continuous integration — the automated test run that guards every change</span>
   </div>
 </section>
@@ -514,9 +512,9 @@ decisions one by one.</pre>
   <h2>Name things once, and write it down</h2>
   <div class="cols two">
     <div>
-      <p>Eric Evans named this in <em>Domain-Driven Design</em>: one agreed word per concept, used
-      identically in conversation, documentation and code. It reads like bookkeeping. It is the
-      cheapest defect prevention available.</p>
+      <p>Eric Evans describes a shared language grounded in the domain model. Keep it consistent
+      within a bounded context; different contexts can legitimately model a customer differently.
+      Make those boundaries and translations explicit.</p>
       <div class="card bad">
         <span class="k">The failure it prevents</span>
         <p>Two people use one word for two different things and never find out. The API author means
@@ -536,7 +534,7 @@ decisions one by one.</pre>
         <thead><tr><th style="width:34%">Entry</th><th>Why it earns its place</th></tr></thead>
         <tbody>
           <tr><td>The agreed term</td><td>One word per concept — not two, and not a synonym per team</td></tr>
-          <tr><td>The central entity</td><td>The one thing everything else hangs off, so every conversation starts in the same place</td></tr>
+          <tr><td>The key entities</td><td>Their identities, responsibilities, and consistency boundaries within this context</td></tr>
           <tr><td>Pairs that get conflated</td><td>Two words a newcomer will treat as interchangeable, and the distinction that actually matters</td></tr>
           <tr><td>Words the code and the interface disagree on</td><td>The equivalence written down as a decision, rather than tolerated silently</td></tr>
           <tr><td>Terms deliberately retired</td><td>The word that came to mean three things, and what replaced it</td></tr>
@@ -545,13 +543,13 @@ decisions one by one.</pre>
       <p style="font-size:var(--fs-sm)"><span class="tag">ILLUSTRATIVE</span> In the ordering system used
       from here on: <em>order</em> is the central entity; <em>captured</em> and <em>settled</em> are the
       pair everyone conflates; the API says <em>customer</em> where the interface says <em>account</em>.</p>
-      <p style="font-size:var(--fs-sm)">The fourth row is the one everyone skips. A disagreement you
-      <em>record</em> stops costing you. A disagreement you tolerate silently gets rediscovered by
-      every person and every model that arrives after you.</p>
+      <p style="font-size:var(--fs-sm)">Record disagreements and their resolution, then update
+      the glossary when the model changes. Written decisions help prevent repeated confusion,
+      but only if the code and integration mappings still reflect them.</p>
     </div>
   </div>
   <div class="vocab">
-    <span><b>central entity</b>the single object everything else hangs off — <em>aggregate root</em> in Evans' terms</span>
+    <span><b>aggregate root</b>the entry point to one aggregate and its consistency boundary, not a single entity for the entire system</span>
     <span><b>conflate</b>treat two distinct things as one, usually because they share a word</span>
   </div>
 </section>
@@ -583,14 +581,13 @@ decisions one by one.</pre>
     </div>
     <div class="card accent">
       <span class="k">The principle</span>
-      <p style="font-size:var(--fs-lg);color:var(--fg);line-height:1.35">A rule that lives only in
-      a comment cannot be violated. It can only be <em>contradicted</em> — silently.</p>
+      <p style="font-size:var(--fs-lg);color:var(--fg);line-height:1.35">A rule documented only
+      in a comment can be violated without an automated check noticing.</p>
       <p style="margin-top:.9rem">The register is the ubiquitous language with teeth: the shared
       vocabulary <em>plus</em> the mechanism that makes disagreement fail loudly.</p>
-      <p style="margin-top:.9rem"><strong>Two categories, never three.</strong> A rule is either
-      enforced by a named test, or explicitly marked as unenforced. There is deliberately no third
-      bucket for “we mean this, but nothing checks it” — that bucket is precisely where wrong
-      beliefs go to live undisturbed.</p>
+      <p style="margin-top:.9rem">Record what actually checks each rule: a test, type restriction,
+      database constraint, runtime guard, or monitor. Also record coverage gaps. A named test is
+      evidence for the cases it exercises, not a guarantee over all possible inputs.</p>
     </div>
   </div>
   <div class="vocab">
@@ -603,25 +600,26 @@ decisions one by one.</pre>
 <!-- ══════════════════ 18 ══════════════════ -->
 <section class="slide">
   <p class="eyebrow">Part two · Test-first</p>
-  <h2>A test written after the code encodes the code</h2>
+  <h2>Derive expected behavior independently of the code</h2>
   <div class="cols two">
     <div>
       <p>The common loop is: build the feature, then wrap tests around what was built. Those tests
-      pass. They also <strong>encode whatever the code already does</strong>, including its mistakes.</p>
+      pass, but may <strong>copy whatever the code already does</strong>, including its mistakes.</p>
       <div class="card bad">
         <span class="k">The failure it produces</span>
         <p>A wrong behaviour acquires a <em>passing test</em>. The mistake is no longer merely
         present — it is <strong>defended</strong>. Correcting it now looks like breaking something,
         and CI will agree with the mistake.</p>
-        <p style="margin-top:.6rem">A test written <strong>first</strong> would have been unpassable
-        against that behaviour. That is the whole difference: a test-first test can tell you your
-        belief about the system is false. A test-last test structurally cannot.</p>
+        <p style="margin-top:.6rem">Tests written before or after implementation can find defects
+        when their expected results come from an independent requirement. Test-first makes that
+        separation easier to maintain, but a mistaken expectation can occur in either workflow.</p>
       </div>
       <div class="card accent" style="margin-top:1rem">
         <span class="k">What the evidence reports</span>
-        <p>Four industrial teams — three at Microsoft, one at IBM — recorded <strong>40–90% lower
-        pre-release defect density</strong> after adopting TDD, measured against comparable projects
-        that did not. The same study is candid about the cost: initial development took longer.</p>
+        <p>The cited 2008 paper reports results and experiences from <strong>four industrial teams</strong>
+        using TDD. Treat it as context-specific case-study evidence, not a controlled evaluation of
+        coding agents or a forecast for your team. Measure defect escape, review effort, and cycle
+        time in your own setting.</p>
         <p style="margin-top:.5rem;font-size:var(--fs-label);color:var(--fg-subtle)">Nagappan,
         Maximilien, Bhat &amp; Williams, <em>Empirical Software Engineering</em>, 2008.</p>
       </div>
@@ -631,23 +629,23 @@ decisions one by one.</pre>
         <span class="k">What the test-last loop produces</span>
         <pre style="margin:.5rem 0 0;background:var(--surface-2)"><span class="dim">write code</span>
 <span class="dim">observe behaviour</span>
-<span class="red">assert the behaviour you observed</span>   <span class="dim">← green, and meaningless</span></pre>
+<span class="red">assert only the behaviour you observed</span>   <span class="dim">← may preserve a defect</span></pre>
       </div>
       <div class="card accent" style="margin-top:1rem">
         <span class="k">What the test-first loop produces</span>
         <pre style="margin:.5rem 0 0;background:var(--surface-2)"><span class="hi">assert the behaviour you want</span>
 <span class="red">watch it fail — for the predicted reason</span>
 <span class="grn">smallest change that makes it pass</span>
-<span class="dim">run everything; a failure elsewhere means
-the change is wrong, not the test</span></pre>
+<span class="dim">run related checks; investigate regressions
+before changing code or expectations</span></pre>
       </div>
-      <p style="margin-top:1rem;font-size:var(--fs-sm)">The last line is the one that gets dropped
-      under pressure, and it is the one that matters: a failure somewhere else means your change is
-      wrong, not that the other test is inconvenient.</p>
+      <p style="margin-top:1rem;font-size:var(--fs-sm)">A failing check may reveal a regression,
+      an outdated contract, a faulty test, or an environment problem. Diagnose it before deciding
+      which part should change.</p>
     </div>
   </div>
   <div class="vocab">
-    <span><b>test-last</b>writing the test after the code, so it records what the code <em>does</em> rather than what it <em>should</em> do</span>
+    <span><b>test-last</b>writing tests after implementation; still useful when expectations are derived independently</span>
     <span><b>pinned by a test</b>a wrong behaviour protected by a passing test, so correcting it looks like breaking something</span>
     <span><b>green / red</b>a suite where every test passes / one where something fails</span>
   </div>
@@ -682,8 +680,8 @@ original charge.</pre>
 <span class="red">run it → red, because it isn't</span>
 <span class="grn">cap the refund at captured</span>
 <span class="grn">run it → green</span></pre>
-      <p>The red step is the proof. Green on the first run would have meant the belief was already
-      true and this rule was never the risk.</p>
+      <p>A failure for the predicted reason demonstrates the gap for that case. A first-run pass
+      could mean existing support or a weak test; inspect the assertion before drawing a conclusion.</p>
     </div>
     <div class="card good">
       <span class="k">04 · The register closes the loop</span>
@@ -694,11 +692,9 @@ original charge.</pre>
   </div>
   <div class="card accent" style="margin-top:.8rem">
     <span class="k">What the journey actually changed</span>
-    <p style="max-width:none">The rule was true at step 01 and true at step 04. Nothing about the
-    system's behaviour is different because it was written down. <strong>What changed is what happens
-    when it stops being true</strong> — at step 01, nothing; at step 04, a red build with a number
-    attached to it. That is the entire value of all three practices, and it is why prose was never
-    a weaker version of a test. It is a different kind of thing.</p>
+    <p style="max-width:none">The requirement existed at step 01; step 03 exposed a missing check
+    and changed the implementation. Step 04 makes that case repeatable in CI. Documentation explains
+    the intended rule, while tests and runtime constraints check particular aspects of it.</p>
   </div>
   <div class="vocab">
     <span><b>red</b>a failing test — here, the evidence that the rule was genuinely unguarded</span>
@@ -714,16 +710,17 @@ original charge.</pre>
   get there from a file that has quietly become the entire system.</p>
   <div class="cols tight">
     <div class="card accent"><span class="k">01 · Freeze the output first</span>
-      <p>Before touching structure, capture a <strong>golden master</strong> — a full snapshot of the
-      output plus a hash of it. Then prove the check is sharp enough to catch a one-character change.
-      An unverified safety net is not a safety net; it is the feeling of one.</p></div>
+      <p>Before touching structure, capture representative outputs in a reviewed baseline.
+      Deliberately perturb one relevant value to verify that the comparison detects it.
+      Add independent assertions for important behavior the baseline does not establish.</p></div>
     <div class="card accent"><span class="k">02 · Cut at boundaries you can name</span>
       <p>Not “split this 2,000-line file into four”. Say what each piece is <em>for</em> first. If the
       responsibility does not fit in one sentence, the boundary is in the wrong place — and what you
       get back is the left-hand picture below.</p></div>
     <div class="card accent"><span class="k">03 · Prove the parts rejoin</span>
-      <p>Assert that the reassembled output is <strong>byte-identical</strong> to the golden master
-      <em>before</em> deleting the original. Not equivalent. Not equivalent-looking. Identical.</p></div>
+      <p>Use byte equality when exact output is the contract. For nondeterministic output,
+      normalize only irrelevant variation or compare semantic properties. Combine snapshots with
+      independent assertions; a captured baseline may already contain a defect.</p></div>
     <div class="card accent"><span class="k">04 · Do not move the test seam</span>
       <p>Leave the place where a test substitutes a fake exactly where it was. Relocating the seam
       during a restructure gives you two changes at once and no way to tell which one broke it.</p></div>
@@ -731,7 +728,7 @@ original charge.</pre>
   <div class="card good" style="margin-top:.7rem">
     <span class="k">Deep, not merely split</span>
     <div style="display:flex;gap:1.4rem;align-items:center;margin-top:.5rem;flex-wrap:wrap">
-      <div style="display:flex;gap:1.4rem;align-items:flex-end">
+      <div style="display:flex;gap:1.4rem;align-items:flex-end;flex-wrap:wrap">
         <div>
           <div class="dgrid" style="max-width:200px;align-items:flex-end;min-height:52px">
             <div class="unit" style="width:56px"><div class="iface" style="width:100%"></div>
@@ -755,14 +752,14 @@ original charge.</pre>
         </div>
       </div>
       <p style="max-width:52ch;margin-bottom:0;flex:1;min-width:280px">Both sides hold the same six
-      units of functionality — the difference is how much blue line a caller has to learn. Breaking a
+      units of functionality — the difference is how much interface a caller has to learn. Breaking a
       large file into many small ones lands you on the left: same behaviour, more interfaces, nothing
       hidden. In a well-split system the <em>largest</em> module is often large on purpose, because it
       is the one concealing the most.</p>
     </div>
   </div>
   <div class="vocab">
-    <span><b>golden master</b>a saved copy of known-correct output; the test fails if new output differs at all</span>
+    <span><b>golden master</b>a reviewed baseline of observed output; useful for detecting change, not proof that the baseline is correct</span>
     <span><b>byte-identical</b>literally the same file, not merely equivalent-looking</span>
     <span><b>test seam</b>the one place a test can point the code at a fake instead of the real thing</span>
   </div>
@@ -771,7 +768,7 @@ original charge.</pre>
 <!-- ══════════════════ 21 ══════════════════ -->
 <section class="slide">
   <p class="eyebrow">Part two · Feedback loops</p>
-  <h2>Six layers, because each catches a different lie</h2>
+  <h2>Combine checks with different failure coverage</h2>
   <p style="font-size:var(--fs-sm)"><span class="tag">ILLUSTRATIVE</span> One workable set, not the
   set. What transfers is the question in the last column, asked of whatever layers you have.</p>
   <table>
@@ -780,15 +777,15 @@ original charge.</pre>
       <tr><td>Unit — pure helpers</td><td>Wrong maths, wrong parsing, wrong dates</td><td>No I/O and no dependencies, so it is cheap enough to run on every save rather than every merge</td></tr>
       <tr><td>Synthetic end-to-end</td><td>A wrong total across an invented dataset whose answer you worked out by hand</td><td>The expected value is hand-computed, so a plausible-looking total still fails</td></tr>
       <tr><td>Invariant</td><td>Two views of the same data that stop agreeing</td><td>Asserts a <em>relationship</em> rather than a value, so it survives new data instead of needing an update</td></tr>
-      <tr><td>Contract</td><td>A rename, or a fixture that lies about the real shape</td><td>Pins names and keys; a golden master froze values only, so a rename there just looks like “regenerate the golden”</td></tr>
-      <tr><td>Golden master</td><td>Output drifting without anyone deciding it should</td><td>Byte-identical or it fails — which forces intended changes to be regenerated <em>deliberately</em></td></tr>
-      <tr><td>Real-data sample</td><td>Rules that hold on fixtures but not on production shapes</td><td>The only layer whose input you did not author, so it is the only one that can surprise you</td></tr>
+      <tr><td>Contract</td><td>A provider change that breaks a consumer's expectations</td><td>Checks expected shape and behavior explicitly, using representative provider data where appropriate</td></tr>
+      <tr><td>Golden master</td><td>Unexpected changes to reviewed output</td><td>Compares exact bytes or selected semantic properties according to the contract; baseline changes require review</td></tr>
+      <tr><td>Real-data sample</td><td>Rules that hold on fixtures but not on production shapes</td><td>Use authorized, minimized, or de-identified samples; synthetic and property-based tests remain complementary</td></tr>
     </tbody>
   </table>
   <p style="max-width:none;margin-top:.6rem"><strong>The count of tests is not the point — the
-  coverage of <em>failure kinds</em> is.</strong> A thousand unit tests will never catch output drifting
-  unnoticed, and a golden master will never tell you a rename broke a contract. Ask what class of lie
-  each layer is structurally capable of catching, and which classes nothing currently catches at all.</p>
+  coverage of <em>failure kinds</em> is.</strong> These layers overlap. A snapshot can catch a renamed
+  field, and a unit test can detect output drift if it asserts that property. Choose independent
+  checks for important risks rather than assuming each test label guarantees unique coverage.</p>
   <div class="vocab">
     <span><b>fixture</b>the prepared data a test runs against</span>
     <span><b>synthetic</b>invented data built to match the real thing exactly in shape</span>
@@ -824,10 +821,10 @@ original charge.</pre>
         is not the number the grep finds.</p>
       </div>
       <div class="card accent">
-        <span class="k">Delete the fallback and let it raise</span>
-        <p>Before keeping a defensive default, measure how often it actually fires against real data.
-        A fallback that has never once fired is not protection — it is a silent branch waiting to
-        substitute something plausible for something true. Delete it and make the failure loud.</p>
+        <span class="k">Make fallback behavior explicit</span>
+        <p>Record when a fallback runs and test the failure it is meant to handle. Infrequent use
+        does not make it unnecessary. Fail closed for security or integrity violations; degrade
+        gracefully when a documented fallback preserves an acceptable service outcome.</p>
       </div>
     </div>
   </div>
@@ -900,7 +897,7 @@ original charge.</pre>
         <li>A suite that has to stay green on every change, and has to be maintained like code</li>
         <li>A domain document and an invariant register that must be updated <em>with</em> the code —
         otherwise they become the prose problem they were written to solve</li>
-        <li>Longer initial development time; the research is explicit about this</li>
+        <li>Time spent designing and maintaining useful tests, especially while adopting a new workflow</li>
       </ul>
       <p><strong>None of it is free, and none of it is restructuring for its own sake.</strong> Each
       piece earns its place by arriving after something specific went wrong. Adopting all of it
@@ -909,10 +906,10 @@ original charge.</pre>
     <div>
       <h3>What it buys</h3>
       <ul>
-        <li>Restructuring that is provably behaviour-preserving, byte for byte</li>
+        <li>Evidence that restructuring preserves the behavior exercised by your checks</li>
         <li>A rename or a stale copy fails CI instead of quietly changing someone's numbers</li>
         <li>Substantial changes delegated inside a module and verified at its boundary</li>
-        <li>Documentation that <strong>cannot</strong> drift from the code without failing a test</li>
+        <li>Automated detection of the documentation drift you explicitly check</li>
         <li>Capabilities you had written off — once a boundary is testable, “we can't do that” stops
         being a belief and becomes a claim you can check</li>
       </ul>
@@ -925,7 +922,7 @@ original charge.</pre>
     </div>
   </div>
   <div class="vocab">
-    <span><b>behaviour-preserving</b>restructured code that provably does exactly what it did before</span>
+    <span><b>behaviour-preserving</b>an intended refactoring property; test results support it only within their coverage</span>
     <span><b>green</b>every test passing — the state a change has to leave the repo in</span>
   </div>
 </section>
@@ -935,8 +932,8 @@ original charge.</pre>
   <p class="eyebrow">Close</p>
   <h2>The takeaway</h2>
   <blockquote style="max-width:none">
-    Code is not cheap. AI is a superb tactical programmer.<br />
-    <em>The strategic layer is still yours</em> — and it runs on fundamentals we already had.
+    Faster generation does not remove engineering responsibility.<br />
+    <em>Agree the behavior, verify the change, and review the risks the tests do not cover.</em>
   </blockquote>
   <div class="cols" style="margin-top:1.4rem">
     <div class="card accent"><span class="k">Say what the words mean</span>
@@ -946,14 +943,16 @@ original charge.</pre>
     <div class="card accent"><span class="k">Keep the loop short</span>
       <p>Test first. Smallest change. The feedback rate is the speed limit.</p></div>
     <div class="card accent"><span class="k">Own the interfaces</span>
-      <p>Design them yourself. Delegate what sits behind them. Verify from outside.</p></div>
+      <p>Keep contracts clear. Delegate bounded changes. Review both behavior and implementation risk.</p></div>
   </div>
   <div class="footnote">
-    Talk: “Software Fundamentals Matter More Than Ever” — Matt Pocock ·
-    Sources: <em>A Philosophy of Software Design</em> (Ousterhout) ·
+    This article interprets Matt Pocock's “Software Fundamentals Matter More Than Ever” argument;
+    it is not a transcript or a claim that the guidance has been experimentally validated for AI agents.<br />
+    References: <a href="https://web.stanford.edu/~ouster/cgi-bin/book.php">A Philosophy of Software Design</a> (Ousterhout) ·
     <em>Object-Oriented Software Construction</em> (Meyer) ·
-    <em>Domain-Driven Design</em> (Evans) · <em>The Pragmatic Programmer</em> ·
+    <a href="https://martinfowler.com/bliki/BoundedContext.html">Bounded Context</a> (Fowler, discussing Evans' DDD) · <em>The Pragmatic Programmer</em> ·
     <em>The Design of Design</em> (Brooks) · Kent Beck ·
+    <a href="https://doi.org/10.1007/s10664-008-9062-z">Realizing quality improvement through test driven development</a>,
     Nagappan, Maximilien, Bhat &amp; Williams, <em>Empirical Software Engineering</em> (2008)
   </div>
 </section>
@@ -964,7 +963,7 @@ original charge.</pre>
 <div id="hud"><b id="cur">1</b> / <span id="tot">25</span></div>
 <div id="hint"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>F</kbd> fullscreen · <kbd>P</kbd> print to PDF</div>
 
-<script defer src="../../assets/deck.js"></script>
-<script defer src="../../assets/site.js"></script>
+<script defer src="../../assets/deck.js?v=portfolio-1"></script>
+<script defer src="../../assets/site.js?v=portfolio-1"></script>
 </body>
 </html>

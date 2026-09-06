@@ -1,0 +1,106 @@
+@layer reset, theme, base, components, chrome, article;
+
+@layer theme {
+  :root {
+    color-scheme: light;
+    --bg: #f4f2eb;
+    --surface: #fffdf7;
+    --surface-2: #fbfaf6;
+    --surface-3: #eeeae0;
+    --fg: #17252b;
+    --fg-muted: #526067;
+    --fg-subtle: #59656a;
+    --code-fg: #7b5817;
+    --border: #d8d2c6;
+    --border-subtle: #d8d2c6;
+    --accent: #7b5817;
+    --accent-soft: rgba(149, 108, 27, 0.08);
+    --accent-border: #817866;
+    --good: #1a6b36;
+    --good-soft: rgba(26, 107, 54, 0.08);
+    --good-border: #1a6b36;
+    --warn: #7b5817;
+    --warn-soft: rgba(149, 108, 27, 0.08);
+    --warn-border: #817866;
+    --bad: #ad2525;
+    --bad-soft: rgba(173, 37, 37, 0.08);
+    --bad-border: #ad2525;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --font-sans: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: Consolas, "Courier New", Courier, monospace;
+    --fs-label: 0.8125rem;
+    --fs-sm: 1rem;
+    --fs-base: 1rem;
+    --fs-lg: 1.1875rem;
+    --fs-xl: 2.625rem;
+    --fs-h2: 2rem;
+    --fs-h3: 1.125rem;
+    --fs-code: 0.875rem;
+    --fs-inline-code: 0.86em;
+    --fs-stat: 1.75rem;
+    --slide-pad-top: 88px;
+    --slide-pad-inline: 48px;
+    --slide-pad-bottom: 56px;
+    --read-measure: 1100px;
+    --read-pad-block: 48px;
+    --control-gap: 8px;
+    --control-pad: 8px 12px;
+    --control-offset: 16px;
+    --card-pad: 20px 24px;
+    --table-head-pad: 8px 12px;
+    --table-cell-pad: 10px 12px;
+    --quote-pad: 16px 20px;
+    --tag-pad: 4px 8px;
+    --code-pad: 16px;
+    --inline-code-pad: 0.12em 0.38em;
+    --panel-pad: 16px;
+    --unit-pad: 8px;
+    --count-pad-top: 16px;
+    --footnote-pad-top: 16px;
+    --vocab-pad-top: 12px;
+    --kbd-pad: 2px 4px;
+    --reset-space: 0;
+    --list-indent: 1.1rem;
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #101b20;
+    --surface: #1b2d35;
+    --surface-2: #14232a;
+    --surface-3: #233943;
+    --fg: #f2efe6;
+    --fg-muted: #b2c2ca;
+    --fg-subtle: #bcc8ce;
+    --code-fg: #e0b66b;
+    --border: #3b535e;
+    --border-subtle: #3b535e;
+    --accent: #e0b66b;
+    --accent-soft: rgba(224, 182, 107, 0.12);
+    --accent-border: #78909a;
+    --good: #4ade80;
+    --good-soft: rgba(74, 222, 128, 0.08);
+    --good-border: #4ade80;
+    --warn: #e0b66b;
+    --warn-soft: rgba(224, 182, 107, 0.12);
+    --warn-border: #78909a;
+    --bad: #f87171;
+    --bad-soft: rgba(248, 113, 113, 0.08);
+    --bad-border: #f87171;
+  }
+
+  @media (max-width: 700px) {
+    :root {
+      --fs-xl: 1.875rem;
+      --fs-h2: 1.5rem;
+      --slide-pad-top: 80px;
+      --slide-pad-inline: 20px;
+      --slide-pad-bottom: 48px;
+      --read-pad-block: 32px;
+      --control-offset: 8px;
+      --control-pad: 8px 10px;
+      --card-pad: 16px;
+    }
+  }
+}

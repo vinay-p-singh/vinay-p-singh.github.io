@@ -22,7 +22,11 @@ A flat static site with no build step and no generator. Each article is a self-c
     └── linkedin-post-ideas/      turns an article into LinkedIn drafts
 ```
 
-Article pages keep their own design. They load `site.js` and nothing else, so the site can evolve without touching published work.
+Article content lives in its HTML file. Shared structure and behavior live in
+`assets/deck.css`, `assets/deck.js`, and `assets/site.js`. The current article uses
+one `assets/theme-portfolio.css` file with light/dark variants, matching the portfolio's
+ink-and-brass palette. `assets/article-theme.js` applies the theme before rendering
+and recognizes the homepage preference plus the old Midnight/Paper preferences.
 
 The [portfolio](https://vinay-p-singh.github.io/portfolio/) is the visual reference:
 the homepage matches its ink-and-brass light/dark color tokens, sans-serif headings,
@@ -42,10 +46,16 @@ attribution. The article catalog still supplies the GitHub profile's latest-writ
 ## Publishing an article
 
 1. Create `articles/<slug>/` and drop `index.html` in. Images, if any, go in the same folder.
-2. Add one line before `</body>`:
+2. For a deck article, use `data-mode="read" data-theme="light" data-themes="light dark"`
+   on `<html>`. Link the shared assets with relative paths. Load the theme initializer
+   and styles in the head, and the deferred runtime scripts before `</body>`:
 
    ```html
-   <script defer src="/assets/site.js"></script>
+   <script src="../../assets/article-theme.js"></script>
+   <link rel="stylesheet" href="../../assets/deck.css">
+   <link rel="stylesheet" href="../../assets/theme-portfolio.css">
+   <script defer src="../../assets/deck.js"></script>
+   <script defer src="../../assets/site.js"></script>
    ```
 
 3. Add an entry to `articles.json`:
@@ -78,7 +88,9 @@ The homepage fetches `articles.json` over HTTP, which the `file://` protocol blo
 python -m http.server 8080
 ```
 
-Then open http://localhost:8080. This matches how GitHub Pages serves the site. Individual article pages open fine directly from disk, though the back-link needs the server to resolve.
+Then open http://localhost:8080. This matches how GitHub Pages serves the site.
+Individual articles also open from disk; their back-link resolves to the local
+homepage, whose article catalog still requires HTTP.
 
 ## The LinkedIn skill
 
@@ -96,4 +108,18 @@ To use the skill from Copilot CLI as well, copy or symlink the folder into `~/.c
 
 ## Deck articles
 
-Articles in deck format are keyboard-driven: `←` `→` to navigate, `F` for fullscreen, `P` to print to PDF. Slides are deep-linkable with `#s<N>` — for example `/articles/<slug>/#s14`.
+The current article opens in reading mode unless a desktop reader has saved a
+presentation preference. Phones start in reading mode. Present/Read switches views;
+the Light/Dark control shares the homepage's `writing:theme` preference.
+
+In presentation mode, `←` / `→` navigate, `R` switches views, `T` changes theme,
+`F` toggles fullscreen, and `P` prints. Dense sections scroll within a focusable
+region instead of shrinking text. Space and Page Up/Down remain available for
+scrolling, and shortcuts do not intercept form fields, links, or buttons.
+Sections keep their `#s<N>` deep links in both views. Printing includes all sections
+with scrolling removed and navigation hidden.
+
+Before publishing, run the article structure and UX checks in `.github/skills/`.
+Use all seven presentation viewports and check reading mode separately. Revise
+claims against sources, distinguish examples from measured results, and record the
+revision date without changing the original publication date or article URL.

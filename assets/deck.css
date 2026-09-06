@@ -3,9 +3,9 @@
    comes from a theme file that fills the token contract documented in
    .github/skills/article-structure-check/references/layout-contract.md
 
-   An article links this file and exactly one theme, in either order:
+  An article links this file and exactly one theme, in either order:
      <link rel="stylesheet" href="../../assets/deck.css">
-     <link rel="stylesheet" href="../../assets/theme-midnight.css">
+    <link rel="stylesheet" href="../../assets/theme-portfolio.css">
 
    The layer order below is repeated at the top of every framework file, so
    whichever one the browser parses first establishes the same cascade. */
@@ -13,10 +13,11 @@
 
 @layer reset {
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;height:100%}
+  html,body{margin:0;padding:var(--reset-space);height:100%}
   body{
     background:var(--bg); color:var(--fg);
     font-family:var(--font-sans);
+    font-size:var(--fs-base); letter-spacing:0;
     -webkit-font-smoothing:antialiased; overflow:hidden;
   }
 }
@@ -32,30 +33,35 @@
   animation:fade .22s ease-out;
 }
 .slide.active{display:block}
-/* Content lives in .inner, injected at boot, so it can be scaled to fit any screen.
-   It is also the query container, so components collapse on their own width. */
+.slide{scroll-margin-top:var(--slide-pad-top)}
+/* The outer container sets available height; dense content scrolls inside it.
+  Container queries collapse components according to the available width. */
 .inner{
   display:flex; flex-direction:column; justify-content:center; min-height:100%;
   transform-origin:top center;
   container-type:inline-size; container-name:slide;
 }
+.slide-content{min-height:0; max-height:100%; width:100%; overflow:auto; scrollbar-gutter:stable}
+.slide-content:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 .eyebrow{
-  font-size:var(--fs-label); letter-spacing:.13em; text-transform:uppercase;
+  font-size:var(--fs-label); letter-spacing:0;
   color:var(--accent); font-weight:600; margin:0 0 .8rem;
 }
-h1{font-size:clamp(2rem,4.4vw,3.4rem); line-height:1.08; margin:0 0 1.2rem; letter-spacing:-.02em}
-h2{font-size:clamp(1.5rem,2.9vw,2.3rem); line-height:1.15; margin:0 0 1.4rem; letter-spacing:-.015em}
-h3{font-size:1.02rem; margin:0 0 .55rem; color:var(--fg)}
+h1{font-size:var(--fs-xl); line-height:1.15; margin:0 0 1.2rem; letter-spacing:0}
+h2{font-size:var(--fs-h2); line-height:1.25; margin:0 0 1.4rem; letter-spacing:0}
+h3{font-size:var(--fs-h3); margin:0 0 .55rem; color:var(--fg)}
 p{margin:0 0 .9rem; line-height:1.55; color:var(--fg-muted); max-width:60ch}
 p.lead{font-size:var(--fs-lg); color:var(--fg); max-width:34ch; line-height:1.35}
 strong{color:var(--fg); font-weight:600}
 em{color:var(--accent); font-style:normal; font-weight:600}
-code{font-family:var(--mono); font-size:.86em; background:var(--surface-3);
-     padding:.12em .38em; border-radius:4px; color:var(--code-fg)}
+code{font-family:var(--mono); font-size:var(--fs-inline-code); background:var(--surface-3);
+  padding:var(--inline-code-pad); border-radius:4px; color:var(--code-fg); overflow-wrap:anywhere}
+a{color:var(--accent); text-underline-offset:4px; overflow-wrap:anywhere}
+a:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
 
-ul{margin:0 0 1rem; padding-left:1.1rem; line-height:1.6; color:var(--fg-muted)}
+ul{margin:0 0 1rem; padding-left:var(--list-indent); line-height:1.6; color:var(--fg-muted)}
 li{margin-bottom:.5rem} li::marker{color:var(--accent)}
 
 }
@@ -70,7 +76,7 @@ li{margin-bottom:.5rem} li::marker{color:var(--accent)}
 .cols.two{grid-template-columns:1fr 1fr}
 .cols.tight{gap:1rem}
 .cols > *{min-width:0}
-@container slide (max-width:640px){
+@container slide (max-width:700px){
   .cols,.cols.two{grid-template-columns:1fr}
   /* A table's min-content width is set by its longest unbreakable cell, so it
      cannot shrink into a narrow column. Let the text wrap, and give the table
@@ -81,41 +87,42 @@ li{margin-bottom:.5rem} li::marker{color:var(--accent)}
 
 .card{
   background:var(--surface); border:1px solid var(--border);
-  border-radius:var(--radius); padding:1.05rem 1.15rem;
+  border-radius:var(--radius); padding:var(--card-pad);
 }
 .card.accent{border-left:3px solid var(--accent)}
 .card.good{border-left:3px solid var(--good)}
 .card.bad{border-left:3px solid var(--bad)}
 .card.warn{border-left:3px solid var(--warn)}
 .card p{margin-bottom:0; font-size:var(--fs-sm)}
-.card .k{font-size:var(--fs-label); letter-spacing:.1em; text-transform:uppercase;
+.card .k{font-size:var(--fs-label); letter-spacing:0;
          color:var(--fg-subtle); display:block; margin-bottom:.35rem}
-.card .v{font-size:1.9rem; font-weight:650; color:var(--accent); line-height:1.1;
+.card .v{font-size:var(--fs-stat); font-weight:650; color:var(--accent); line-height:1.1;
          font-variant-numeric:tabular-nums}
 .card .sub{font-size:var(--fs-label); color:var(--fg-subtle); margin-top:.3rem; display:block}
 
-table{border-collapse:collapse; width:100%; font-size:var(--fs-sm); margin-bottom:1rem}
+table{border-collapse:collapse; table-layout:fixed; width:100%; font-size:var(--fs-sm); margin-bottom:1rem}
+th,td{overflow-wrap:anywhere}
 th{
-  text-align:left; font-size:var(--fs-label); letter-spacing:.09em; text-transform:uppercase;
-  color:var(--fg-subtle); font-weight:600; padding:.5rem .7rem;
+  text-align:left; font-size:var(--fs-label); letter-spacing:0;
+  color:var(--fg-subtle); font-weight:600; padding:var(--table-head-pad);
   border-bottom:1px solid var(--border);
 }
-td{padding:.55rem .7rem; border-bottom:1px solid var(--border-subtle);
+td{padding:var(--table-cell-pad); border-bottom:1px solid var(--border-subtle);
    color:var(--fg-muted); vertical-align:top; line-height:1.45}
-td:first-child{color:var(--fg); font-weight:500; white-space:nowrap}
+td:first-child{color:var(--fg); font-weight:500; white-space:normal}
 tr:last-child td{border-bottom:none}
 
 blockquote{
-  margin:0 0 1.2rem; padding:.9rem 1.2rem; background:var(--accent-soft);
+  margin:0 0 1.2rem; padding:var(--quote-pad); background:var(--accent-soft);
   border-left:3px solid var(--accent); border-radius:0 var(--radius-sm) var(--radius-sm) 0;
   color:var(--fg); font-size:var(--fs-lg); line-height:1.4; max-width:46ch;
 }
 blockquote cite{display:block; margin-top:.5rem; font-style:normal;
-                font-size:var(--fs-label); color:var(--fg-subtle); letter-spacing:.06em}
+                font-size:var(--fs-label); color:var(--fg-subtle); letter-spacing:0}
 
 .tag{
-  display:inline-block; font-size:var(--fs-label); letter-spacing:.06em;
-  padding:.2rem .5rem; border-radius:999px; border:1px solid var(--border);
+  display:inline-block; font-size:var(--fs-label); letter-spacing:0;
+  padding:var(--tag-pad); border-radius:var(--radius-sm); border:1px solid var(--border);
   color:var(--fg-subtle); margin-right:.35rem; background:var(--surface-2);
 }
 .tag.on{color:var(--good); border-color:var(--good-border); background:var(--good-soft)}
@@ -123,9 +130,9 @@ blockquote cite{display:block; margin-top:.5rem; font-style:normal;
 .tag.mid{color:var(--warn); border-color:var(--warn-border); background:var(--warn-soft)}
 
 pre{
-  font-family:var(--mono); font-size:.78rem; line-height:1.5; margin:0 0 1rem;
+  font-family:var(--mono); font-size:var(--fs-code); line-height:1.5; margin:0 0 1rem;
   background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm);
-  padding:.9rem 1rem; overflow-x:auto; color:var(--fg-muted); white-space:pre;
+  padding:var(--code-pad); overflow-x:auto; color:var(--fg-muted); white-space:pre-wrap; overflow-wrap:anywhere;
 }
 pre .hi{color:var(--accent)} pre .dim{color:var(--fg-subtle)}
 pre .red{color:var(--bad)} pre .grn{color:var(--good)}
@@ -134,37 +141,36 @@ pre .red{color:var(--bad)} pre .grn{color:var(--good)}
    The accent line is the interface — its width is what a caller must learn. */
 .depth{display:flex; gap:1.5rem; align-items:stretch; flex-wrap:wrap}
 .dpanel{flex:1; min-width:280px; background:var(--surface); border:1px solid var(--border);
-        border-radius:var(--radius); padding:1rem 1.1rem;
+        border-radius:var(--radius); padding:var(--panel-pad);
         display:flex; flex-direction:column}
-.dpanel h3{font-size:var(--fs-label); letter-spacing:.1em; text-transform:uppercase;
+.dpanel h3{font-size:var(--fs-label); letter-spacing:0;
            margin-bottom:.75rem}
 .dpanel.bad h3{color:var(--bad)} .dpanel.good h3{color:var(--good)}
 .dgrid{display:flex; flex-wrap:wrap; gap:.5rem; max-width:296px}
 .unit{background:var(--surface-2); border:1px solid var(--border);
-      border-radius:var(--radius-sm); padding:.45rem}
+      border-radius:var(--radius-sm); padding:var(--unit-pad)}
 .unit .iface{height:5px; border-radius:3px; background:var(--accent); margin-bottom:.5rem}
 .unit .blobs{display:flex; flex-wrap:wrap; gap:.26rem}
 .blob{width:17px; height:17px; border-radius:4px;
       background:var(--surface-3); border:1px solid var(--border)}
 .dpanel.bad  .unit{width:84px}   .dpanel.bad  .unit .iface{width:100%}
 .dpanel.good .unit{width:141px}  .dpanel.good .unit .iface{width:34px}
-.dcount{margin:auto 0 0; padding-top:.85rem; border-top:1px solid var(--border-subtle);
-        font-size:var(--fs-label); letter-spacing:.08em;
-        text-transform:uppercase; color:var(--fg-subtle)}
+.dcount{margin:auto 0 0; padding-top:var(--count-pad-top); border-top:1px solid var(--border-subtle);
+  font-size:var(--fs-label); letter-spacing:0; color:var(--fg-subtle)}
 .dcount b{color:var(--fg)}
 
-.footnote{margin-top:2.2rem; padding-top:1rem; font-size:var(--fs-label);
+.footnote{margin-top:2.2rem; padding-top:var(--footnote-pad-top); font-size:var(--fs-label);
           color:var(--fg-subtle); border-top:1px solid var(--border-subtle); line-height:1.5}
 
 /* Plain-English gloss for any specialist wording used on the slide above. */
 .vocab{
-  margin-top:1.7rem; padding-top:.75rem; border-top:1px dashed var(--border);
+  margin-top:1.7rem; padding-top:var(--vocab-pad-top); border-top:1px dashed var(--border);
   display:flex; flex-wrap:wrap; gap:.4rem 1.6rem;
   font-size:var(--fs-label); line-height:1.55; color:var(--fg-subtle);
 }
 .vocab::before{
   content:"Vocabulary"; flex:0 0 100%;
-  letter-spacing:.14em; text-transform:uppercase; font-weight:600;
+  letter-spacing:0; font-weight:600;
   color:var(--accent); opacity:.8; margin-bottom:.15rem;
 }
 .vocab span{max-width:46ch}
@@ -181,27 +187,23 @@ pre .red{color:var(--bad)} pre .grn{color:var(--good)}
 #hud{position:fixed; right:1.4rem; bottom:1rem; font-size:var(--fs-label); color:var(--fg-subtle);
      font-variant-numeric:tabular-nums; letter-spacing:.08em; z-index:20}
 #hud b{color:var(--fg-muted); font-weight:600}
-#hint{position:fixed; left:1.4rem; bottom:1rem; font-size:var(--fs-label); color:var(--fg-subtle); z-index:20}
+#hint{display:none}
 #hint kbd{font-family:var(--mono); background:var(--surface-3); border:1px solid var(--border);
-          border-radius:4px; padding:.05rem .3rem; color:var(--fg-muted)}
+          border-radius:4px; padding:var(--kbd-pad); color:var(--fg-muted)}
 
 /* Mode and theme controls, injected by deck.js so no article carries them.
    Top-LEFT on purpose: assets/site.js pins its "← Articles" link to the top
    right at z-index 30, and anything sharing that corner gets its clicks eaten. */
-#controls{position:fixed; top:1rem; left:1.4rem; display:flex; gap:.3rem; z-index:31}
+#controls{position:fixed; top:var(--control-offset); left:var(--control-offset); display:flex; gap:var(--control-gap); z-index:31}
 #controls button{
-  font:inherit; font-size:var(--fs-label); letter-spacing:.06em;
-  padding:.34rem .7rem; cursor:pointer;
-  background:var(--surface-2); color:var(--fg-subtle);
-  border:1px solid var(--border); border-radius:999px;
+  font:inherit; font-size:var(--fs-label); letter-spacing:0;
+  padding:var(--control-pad); cursor:pointer; min-height:44px;
+  background:var(--surface); color:var(--fg);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
 }
 #controls button:hover{color:var(--fg-muted); border-color:var(--accent-border)}
 #controls button:focus-visible{
   outline:2px solid var(--accent); outline-offset:2px; color:var(--fg-muted);
-}
-@media (max-width:640px){
-  #controls{top:.6rem; left:.6rem}
-  #controls button{padding:.3rem .55rem}
 }
 
 /* ---------- reading mode ----------
@@ -216,6 +218,8 @@ pre .red{color:var(--bad)} pre .grn{color:var(--good)}
   border-bottom:1px solid var(--border-subtle);
 }
 :root[data-mode="read"] .slide:last-of-type{border-bottom:none}
+:root[data-mode="read"] .slide:first-child{padding-top:var(--slide-pad-top)}
+:root[data-mode="read"] .slide-content{max-height:none; overflow:visible; scrollbar-gutter:auto}
 :root[data-mode="read"] .slide::before{
   content:counter(section);
   display:block; max-width:var(--read-measure); margin:0 auto .9rem;
@@ -231,9 +235,15 @@ pre .red{color:var(--bad)} pre .grn{color:var(--good)}
 :root[data-mode="read"] #hint{display:none}
 
 @media print{
-  body{overflow:visible}
-  :root[data-mode="deck"] .slide{display:block !important; position:relative; page-break-after:always; height:100vh}
+  html,body,#deck{height:auto; overflow:visible}
+  .slide{display:block !important; position:relative; break-after:page; height:auto; overflow:visible}
+  .inner{height:auto !important; min-height:0 !important; transform:none !important}
+  .slide-content{overflow:visible; max-height:none}
   #bar,#hud,#hint,#controls{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  .slide{animation:none}
+  #bar{transition:none}
 }
 
 }

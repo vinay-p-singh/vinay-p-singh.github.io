@@ -1,7 +1,7 @@
 /* Slide-deck framework runtime.
 
    The same markup renders two ways, chosen by data-mode on <html>:
-     deck  one section at a time, scaled to fit the viewport
+    deck  one section at a time, with readable scrolling for dense content
      read  every section stacked and flowing, nothing scaled, nothing clipped
 
    Theme is data-theme on <html>. Both switches persist in localStorage.
@@ -22,10 +22,17 @@
   var mode = "deck";
   var userChoseMode = false;
 
-  slides.forEach(function (s) {
+  slides.forEach(function (s, index) {
     var inner = document.createElement("div");
     inner.className = "inner";
-    while (s.firstChild) { inner.appendChild(s.firstChild); }
+    var content = document.createElement("div");
+    content.className = "slide-content";
+    content.tabIndex = 0;
+    content.setAttribute("role", "region");
+    content.setAttribute("aria-label", "Section " + (index + 1));
+    while (s.firstChild) { content.appendChild(s.firstChild); }
+    inner.appendChild(content);
+    s.id = "s" + (index + 1);
     s.appendChild(inner);
   });
 
@@ -34,16 +41,20 @@
 
   /* ---------- themes ---------- */
 
-  // A theme is any linked assets/theme-<name>.css. Link two and the toggle appears.
+  // A linked theme can expose named variants through data-themes on the root.
   var themes = Array.prototype.slice.call(document.querySelectorAll('link[rel="stylesheet"]'))
     .map(function (l) { return /theme-([a-z0-9-]+)\.css/.exec(l.getAttribute("href") || ""); })
     .filter(Boolean)
     .map(function (m) { return m[1]; });
+  if (root.getAttribute("data-themes")) {
+    themes = root.getAttribute("data-themes").split(/\s+/);
+  }
 
   function setTheme(name) {
     if (themes.indexOf(name) < 0) { return; }
     root.setAttribute("data-theme", name);
     store(KEY_THEME, name);
+    if (name === "light" || name === "dark") { store("writing:theme", name); }
     paintControls();
   }
 
@@ -58,17 +69,25 @@
     mode = m === "read" ? "read" : "deck";
     if (byUser) { userChoseMode = true; store(KEY_MODE, mode); }
     root.setAttribute("data-mode", mode);
-    if (mode === "deck") { show(i); } else { fitReset(); }
+    if (mode === "deck") { show(i); }
+    else {
+      fitReset();
+      if (byUser) { show(i); }
+    }
     paintControls();
   }
 
   function fitReset() {
-    slides.forEach(function (s) { s.querySelector(".inner").style.transform = ""; });
+    slides.forEach(function (s) {
+      var inner = s.querySelector(".inner");
+      inner.style.transform = "";
+      inner.style.height = "";
+      inner.style.minHeight = "";
+    });
   }
 
   /* ---------- deck behaviour ---------- */
 
-  // Shrink a slide until it fits rather than letting it scroll away off-screen.
   function fit(s) {
     if (mode !== "deck") { return; }
     var inner = s.querySelector(".inner");
@@ -78,10 +97,7 @@
     inner.style.minHeight = "0";
     var cs = getComputedStyle(s);
     var avail = s.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-    var need = inner.scrollHeight;
-    inner.style.minHeight = "";
-    var k = need > avail ? Math.max(0.5, avail / need) : 1;
-    inner.style.transform = k < 1 ? "scale(" + k + ")" : "none";
+    inner.style.height = Math.max(0, avail) + "px";
     if (wasHidden) { s.classList.remove("active"); s.style.visibility = ""; }
   }
 
@@ -90,7 +106,7 @@
   function show(n) {
     i = Math.max(0, Math.min(slides.length - 1, n));
     if (mode === "read") {
-      slides[i].scrollIntoView({ behavior: "smooth", block: "start" });
+      slides[i].scrollIntoView({ behavior: "instant", block: "start" });
       return;
     }
     slides.forEach(function (s, k) { s.classList.toggle("active", k === i); });
@@ -128,13 +144,13 @@
   function paintControls() {
     if (!btnMode) { return; }
     var toRead = mode === "deck";
-    btnMode.textContent = toRead ? "\u00b6 Read" : "\u25a4 Deck";
+    btnMode.textContent = toRead ? "Read" : "Present";
     btnMode.title = (toRead ? "Read as an article" : "Present as a deck") + "  (R)";
     btnMode.setAttribute("aria-label", btnMode.title);
     if (btnTheme) {
       var next = nextTheme();
       var label = next.charAt(0).toUpperCase() + next.slice(1);
-      btnTheme.textContent = "\u25d0 " + label;
+      btnTheme.textContent = label + " mode";
       btnTheme.title = "Switch to the " + label + " theme  (T)";
       btnTheme.setAttribute("aria-label", btnTheme.title);
     }
@@ -159,7 +175,8 @@
   window.addEventListener("beforeprint", function () { if (mode === "deck") { fitAll(); } });
 
   document.addEventListener("keydown", function (e) {
-    if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) { return; }
+    if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey ||
+      (e.target && (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON|A)$/.test(e.target.tagName)))) { return; }
     var k = e.key.toLowerCase();
 
     if (k === "r") { setMode(mode === "deck" ? "read" : "deck", true); return; }
@@ -172,15 +189,15 @@
     if (k === "p") { window.print(); return; }
 
     if (mode !== "deck") { return; }
-    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); show(i + 1); }
-    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); show(i - 1); }
+    if (e.key === "ArrowRight") { e.preventDefault(); show(i + 1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); show(i - 1); }
     else if (e.key === "Home") { show(0); }
     else if (e.key === "End") { show(slides.length - 1); }
   });
 
   document.addEventListener("click", function (e) {
     if (mode !== "deck") { return; }
-    if (e.target.closest("a, pre, table, button, #controls")) { return; }
+    if (e.target.closest("a, pre, table, button, #controls") || String(window.getSelection()).length) { return; }
     show(e.clientX < window.innerWidth * 0.25 ? i - 1 : i + 1);
   });
 
@@ -200,18 +217,24 @@
   };
 
   var savedTheme = recall(KEY_THEME);
-  setTheme(themes.indexOf(savedTheme) >= 0 ? savedTheme
-    : (root.getAttribute("data-theme") || themes[0]));
+  var initialTheme = root.getAttribute("data-theme");
+  setTheme(themes.indexOf(initialTheme) >= 0 ? initialTheme
+    : (themes.indexOf(savedTheme) >= 0 ? savedTheme : themes[0]));
 
   buildControls();
 
   var savedMode = recall(KEY_MODE);
   var startMode = window.innerWidth < NARROW ? "read"
-    : (savedMode === "read" || savedMode === "deck" ? savedMode : "deck");
+    : (savedMode === "read" || savedMode === "deck" ? savedMode : (root.getAttribute("data-mode") || "deck"));
   root.setAttribute("data-mode", startMode);
   mode = startMode;
 
   var start = parseInt((location.hash || "").replace("#s", ""), 10);
-  i = isNaN(start) ? 0 : start - 1;
+  i = isNaN(start) ? 0 : Math.max(0, Math.min(slides.length - 1, start - 1));
   setMode(startMode);
+  if (!isNaN(start) && mode === "read") { show(i); }
+  window.addEventListener("hashchange", function () {
+    var match = /^#s(\d+)$/.exec(location.hash);
+    if (match) { show(Number(match[1]) - 1); }
+  });
 })();
